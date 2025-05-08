@@ -15,24 +15,24 @@ body {
   justify-content: center;
   align-items: center;
   background: #134E5E;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(45deg, #71B280, #134E5E);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(180deg, #71B280, #134E5E); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: -webkit-linear-gradient(to bottom, #71B280, #134E5E);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to bottom, #71B280, #134E5E); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   }
 
 .calc-container {
   display: flex;
   margin-top: 20px;
   flex-direction: column;
-  background-color: rgb(0, 0, 0);
+  background: linear-gradient(to top, #122216, #041114); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   border-radius: 14px;
-  padding: 30px;
-  box-shadow: 0px 0px 8px 4px rgba(0, 0, 0, 0.39);
+  padding: 35px 15px;
+  box-shadow: 0px 0px 16px 4px rgba(0, 0, 0, 0.39);
 }
 
 button {
   width: var(--s);
   height: var(--s);
-
+  margin: 1px;
 
 
   font-family: inherit;
@@ -40,7 +40,7 @@ button {
   font-size: 18px;
 
   color: white;
-  border-radius: 4px;
+
 
   background-color: rgba(255, 255, 255, 0.00);
   transition: 0.1s background-color;
@@ -61,20 +61,20 @@ button:hover {
   align-items: center;
   height: var(--s);
   padding: 0 15px;
-  margin: 30px 0;
+  margin: 40px 0;
 
   font-size: 200%;
 
   color: white;
-  background-color: rgb(0, 0, 0);
-  border: 1px solid black;
+  background-color: rgb(0, 0, 0,0);
+  /* border: 1px solid black; */
   border-radius: 6px;
 }
 
 .red-font {
-  color: rgb(69, 170, 1);
+  color: #34a04d;
 }
 
 .yellow-font {
-  background-color: rgba(28, 167, 0, 0.);
+  color: #34a04d;
 }
