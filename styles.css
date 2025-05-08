@@ -1,0 +1,80 @@
+@font-face {
+  font-family: "Digital";
+  src: url("DigitalNumbers-Regular.ttf") format("truetype"); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+}
+
+html {
+  --s: 60px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #fe8c00;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to bottom, #f83600, #fe8c00);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to bottom, #f83600, #fe8c00); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  }
+
+.calc-container {
+  display: flex;
+  margin-top: 20px;
+  flex-direction: column;
+  background-color: rgb(0, 0, 0);
+  border-radius: 14px;
+  padding: 30px;
+  box-shadow: 0px 0px 8px 4px rgba(0, 0, 0, 0.39);
+}
+
+button {
+  width: var(--s);
+  height: var(--s);
+
+
+
+  font-family: inherit;
+  font-weight: 100;
+  font-size: 18px;
+
+  color: white;
+  border-radius: 4px;
+
+  background-color: rgba(255, 255, 255, 0.00);
+  transition: 0.1s background-color;
+}
+
+button:hover {
+  transition: 0.1s background-color;
+  background-color: rgb(71, 71, 71);
+}
+
+.button-row {
+  display: flex;
+}
+
+#result-display {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  height: var(--s);
+  padding: 0 15px;
+  margin: 30px 0;
+
+  font-size: 200%;
+
+  color: white;
+  background-color: rgb(0, 0, 0);
+  border: 1px solid black;
+  border-radius: 6px;
+}
+
+.red-font {
+  color: rgb(69, 170, 1);
+}
+
+.yellow-font {
+  background-color: rgba(28, 167, 0, 0.);
+}
