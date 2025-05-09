@@ -8,65 +8,72 @@ const btnBackspace = document.querySelector("button[data-type=backspace]");
 const digitButtons = document.querySelectorAll("button[data-type=digit]");
 const operatorButtons = document.querySelectorAll("button[data-type=operator]");
 
-btnEqual.addEventListener("click", evaluate);
+btnEqual.addEventListener("click", calculate);
 btnClear.addEventListener("click", clearScreen);
 btnBackspace.addEventListener("click", eraseDigit);
 digitButtons.forEach((btn) => {
   btn.addEventListener("click", enterDigit);
 });
 operatorButtons.forEach((btn) => {
-  btn.addEventListener("click", enterOperator);
+  btn.addEventListener("click", calculate);
 });
 
-function evaluate() {
-  const mainContent = divMainDisplay.textContent;
-  const minorContent = divMinorDisplay.textContent;
+function calculate(event) {
+  updateArguments(event)
 
-  if (mainContent === "" || minorContent === "") return;
+  if (nextOperator === "=" && (mainContent === "" || minorContent === ""))
+    return;
+  if (mainContent === "" && minorContent === "") {
+    return;
+  }
+  if (isNaN(+mainContent) || mainContent === "Infinity") {
+    return;
+  }
+  if (mainContent === "") {
+    divMinorDisplay.textContent = minorContent.slice(0, -1) + operator;
+    return;
+  }
+  if (minorContent === "") {
+    firstNumber = +mainContent;
+    divMinorDisplay.textContent = `${firstNumber} ${nextOperator}`;
+    divMainDisplay.textContent = "";
+    return;
+  }
 
+ updateResult();
+ displayResult();
+}
+
+function updateArguments(event) {
+  mainContent = divMainDisplay.textContent;
+  minorContent = divMinorDisplay.textContent;
+  nextOperator = event.target.textContent;
   [firstNumber, operator] = minorContent.split(" ");
   firstNumber = +firstNumber;
   secondNumber = +mainContent;
-
-  let result = operate(firstNumber, secondNumber, operator);
-  let integerDigits = Math.round(result).toString().length;
-  if (integerDigits > 10) {
-    result = Infinity;
-  } else {
-    let digits = Math.max(0, 9 - integerDigits);
-    console.log(digits);
-    result = round(result, digits);
-  }
-
-  divMainDisplay.textContent = result;
-  divMinorDisplay.textContent = "";
 }
 
-function enterOperator(event) {
-  const mainContent = divMainDisplay.textContent;
-  const minorContent = divMinorDisplay.textContent;
-  operator = event.target.textContent;
+function updateResult() {
+  result = trim(operate(firstNumber, secondNumber, operator));
+}
 
-  if (mainContent === "" && minorContent === "") {
-    return;
-  } else if (isNaN(+mainContent) || mainContent === "Infinity") {
-    return;
-  } else if (mainContent === "") {
-    divMinorDisplay.textContent = minorContent.slice(0, -1) + operator;
-  } else if (minorContent === "") {
-    firstNumber = +mainContent;
-    divMinorDisplay.textContent = `${firstNumber} ${operator}`;
-    divMainDisplay.textContent = "";
+function displayResult() {
+  if (nextOperator === "=") {
+    divMainDisplay.textContent = result;
+    divMinorDisplay.textContent = "";
   } else {
-    [firstNumber, operator] = minorContent.split(" ");
-    firstNumber = +firstNumber;
-    secondNumber = +mainContent;
-
-    const result = operate(firstNumber, secondNumber, operator);
-
-    operator = event.target.textContent;
     divMainDisplay.textContent = "";
-    divMinorDisplay.textContent = `${result} ${operator}`;
+    divMinorDisplay.textContent = `${result} ${nextOperator}`;
+  }
+}
+
+function trim(result) {
+  let integerDigits = Math.round(result).toString().length;
+  if (integerDigits > 10) {
+    return Infinity;
+  } else {
+    let digits = Math.max(0, 9 - integerDigits);
+    return round(result, digits);
   }
 }
 
@@ -92,9 +99,13 @@ function enterDigit(event) {
   }
 }
 
+let mainContent;
+let minorContent;
+let nextOperator;
 let firstNumber;
 let secondNumber;
 let operator;
+let result;
 
 // let result = operate(10, 3, "÷");
 // console.log(result)
