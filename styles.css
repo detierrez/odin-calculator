@@ -14,16 +14,29 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #134E5E;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to bottom, #71B280, #134E5E);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to bottom, #71B280, #134E5E); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  }
+  background: #134e5e; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to bottom,
+    #71b280,
+    #134e5e
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to bottom,
+    #71b280,
+    #134e5e
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
 
 .calc-container {
   display: flex;
   margin-top: 20px;
   flex-direction: column;
-  background: linear-gradient(to top, #122216, #041114); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(
+    to top,
+    #18241b,
+    black
+    /* #050c0e */
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   border-radius: 14px;
   padding: 35px 15px;
   box-shadow: 0px 0px 16px 4px rgba(0, 0, 0, 0.39);
@@ -34,47 +47,74 @@ button {
   height: var(--s);
   margin: 1px;
 
-
   font-family: inherit;
-  font-weight: 100;
-  font-size: 18px;
+  font-weight: 300;
+  font-size: 16px;
 
-  color: white;
+  color: rgb(var(--btn-color));
+  border-radius: 5%;
 
-
-  background-color: rgba(255, 255, 255, 0.00);
-  transition: 0.1s background-color;
+  background-color: rgba(255, 255, 255, 0);
+  transition: 0.1s background-color, 0.1s box-shadow, 0.2s border;
 }
 
 button:hover {
+  transition: 0.1s background-color, 0.1s box-shadow, 0.2s border;
+  border: 1px rgb(var(--btn-color)) solid;
+  /* box-shadow: 0px 0px 12px 1px rgb(var(--btn-color), 0.4),
+    inset 0px 0px 30px 1px rgb(var(--btn-color), 0.4); */
+}
+
+button:active {
+  background-color: rgb(var(--btn-color), 0.4);
   transition: 0.1s background-color;
-  background-color: rgb(71, 71, 71);
+}
+
+.red-btn {
+  --btn-color: 160, 52, 52;
+}
+
+.green-btn {
+  --btn-color: 52, 162, 78;
+}
+
+.white-btn {
+  --btn-color: 255, 255, 255;
 }
 
 .button-row {
   display: flex;
 }
 
-#result-display {
+#display {
   display: flex;
+  flex-direction: column;
   justify-content: end;
-  align-items: center;
-  height: var(--s);
-  padding: 0 15px;
-  margin: 40px 0;
+  align-items: stretch;
 
-  font-size: 200%;
+  padding: 0 15px;
+  /* margin: 40px 0; */
 
   color: white;
-  background-color: rgb(0, 0, 0,0);
-  /* border: 1px solid black; */
-  border-radius: 6px;
+  font-size: 36px;
+  font-family: monospace;
+
+  /* border: 1px solid white; */
+  /* border-radius: 6px; */
 }
 
-.red-font {
-  color: #34a04d;
+#primary-display,
+#secondary-display {
+  flex: 1 0 var(--s);
+  min-height: var(--s);
+  padding: 1px 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
 }
 
-.yellow-font {
-  color: #34a04d;
+#secondary-display {
+  align-items: flex-end;
+  color: rgba(255, 255, 255, 0.493);
+  font-size: 50%;
 }
