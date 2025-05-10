@@ -7,107 +7,121 @@ const btnClear = document.querySelector("button[data-type=clear]");
 const btnBackspace = document.querySelector("button[data-type=backspace]");
 const digitButtons = document.querySelectorAll("button[data-type=digit]");
 const operatorButtons = document.querySelectorAll("button[data-type=operator]");
+const allButtons = document.querySelectorAll("button");
 
-btnEqual.addEventListener("click", calculate);
-btnClear.addEventListener("click", clearScreen);
+const MAX_DIGITS = 10;
+
+btnClear.addEventListener("click", clearDisplay);
 btnBackspace.addEventListener("click", eraseDigit);
+btnEqual.addEventListener("click", enterEqual);
 digitButtons.forEach((btn) => {
   btn.addEventListener("click", enterDigit);
 });
 operatorButtons.forEach((btn) => {
-  btn.addEventListener("click", calculate);
+  btn.addEventListener("click", enterOperator);
+});
+allButtons.forEach((btn) => {
+  btn.addEventListener("click", updateDisplay);
 });
 
-function calculate(event) {
-  updateArguments(event)
-
-  if (nextOperator === "=" && (mainContent === "" || minorContent === ""))
-    return;
-  if (mainContent === "" && minorContent === "") {
-    return;
-  }
-  if (isNaN(+mainContent) || mainContent === "Infinity") {
-    return;
-  }
-  if (mainContent === "") {
-    divMinorDisplay.textContent = minorContent.slice(0, -1) + operator;
-    return;
-  }
-  if (minorContent === "") {
-    firstNumber = +mainContent;
-    divMinorDisplay.textContent = `${firstNumber} ${nextOperator}`;
-    divMainDisplay.textContent = "";
-    return;
-  }
-
- updateResult();
- displayResult();
+function clearDisplay() {
+  numberTop = null;
+  numberBot = null;
 }
 
-function updateArguments(event) {
-  mainContent = divMainDisplay.textContent;
-  minorContent = divMinorDisplay.textContent;
-  nextOperator = event.target.textContent;
-  [firstNumber, operator] = minorContent.split(" ");
-  firstNumber = +firstNumber;
-  secondNumber = +mainContent;
-}
-
-function updateResult() {
-  result = trim(operate(firstNumber, secondNumber, operator));
-}
-
-function displayResult() {
-  if (nextOperator === "=") {
-    divMainDisplay.textContent = result;
-    divMinorDisplay.textContent = "";
+function enterOperator(event) {
+  let pressedOperator = event.target.textContent;
+  if (numberTop !== null && numberBot !== null) {
+    numberTop = operate(numberTop, numberBot, operator);
+    numberBot = null;
+    operator = pressedOperator;
+    return;
   } else {
-    divMainDisplay.textContent = "";
-    divMinorDisplay.textContent = `${result} ${nextOperator}`;
+    operator = pressedOperator;
+    if (numberBot !== null) {
+      numberTop = numberBot;
+      numberBot = null;
+    }
   }
 }
 
-function trim(result) {
-  let integerDigits = Math.round(result).toString().length;
-  if (integerDigits > 10) {
-    return Infinity;
+function enterOperator_(event) {
+  let pressedOperator = event.target.textContent;
+  let state = ((numberBot !== null) << 1) + (numberTop !== null);
+  switch (state) {
+    case 0: // there's no number
+    case 1: // there's only numberTop
+      operator = pressedOperator;
+      break;
+    case 2: // there's only numberBot
+      numberTop = numberBot;
+      numberBot = null;
+      operator = pressedOperator;
+      break;
+    case 3: // there's both numbers
+      numberTop = operate(numberTop, numberBot, operator);
+      numberBot = null;
+      operator = pressedOperator;
+      break;
+  }
+}
+
+function enterEqual() {
+  if (numberTop === null) return;
+  if (numberBot === null) {
+    numberBot = numberTop;
+    numberTop = null;
   } else {
-    let digits = Math.max(0, 9 - integerDigits);
-    return round(result, digits);
+    numberBot = operate(numberTop, numberBot, operator);
+    numberTop = null;
   }
 }
 
-function clearScreen() {
-  divMainDisplay.textContent = "";
-  divMinorDisplay.textContent = "";
-}
-
-function eraseDigit() {
-  const mainContent = divMainDisplay.textContent;
-  if (isNaN(+mainContent) || mainContent === "Infinity") {
-    divMainDisplay.textContent = "";
-    return;
+function enterEqual_() {
+  let state = ((numberBot !== null) << 1) + (numberTop !== null);
+  switch (state) {
+    case 0: // there's no number
+    case 2: // there's only numberBot
+      break;
+    case 1: // there's only numberTop
+      numberBot = numberTop;
+      numberTop = null;
+      break;
+    case 3: // there's both numbers
+      numberBot = operate(numberTop, numberBot, operator);
+      numberTop = null;
+      break;
   }
-  divMainDisplay.textContent = mainContent.slice(0, -1);
 }
 
 function enterDigit(event) {
-  const digit = event.target.textContent;
-  const mainContent = divMainDisplay.textContent;
-  if (mainContent.length < 10) {
-    divMainDisplay.textContent = mainContent + digit;
+  let strDigit = event.target.textContent;
+  if (numberBot === null) {
+    numberBot = +strDigit;
+    return;
+  }
+  let strNumber = numberBot.toString();
+  if (strNumber.length < MAX_DIGITS) {
+    numberBot = +(strNumber + strDigit);
   }
 }
 
-let mainContent;
-let minorContent;
-let nextOperator;
-let firstNumber;
-let secondNumber;
-let operator;
-let result;
+function eraseDigit() {
+  if (numberBot === null) return;
+  let strNumber = numberBot.toString();
+  let isOneDigit = strNumber.length <= 1;
+  numberBot = isOneDigit ? null : +strNumber.slice(0, -1);
+}
 
-// let result = operate(10, 3, "÷");
-// console.log(result)
-// result = round(10/3, -6);
-// console.log(result)
+function updateDisplay() {
+  console.log({ number1: numberTop, number2: numberBot, operator });
+  divMinorDisplay.textContent =
+    numberTop !== null ? `${numberTop} ${operator}` : "";
+  divMainDisplay.textContent = numberBot !== null ? `${numberBot}` : "";
+}
+
+let numberTop = 2;
+let numberBot = 123;
+let operator = "+";
+
+updateDisplay();
