@@ -29,70 +29,6 @@ function clearDisplay() {
   numberBot = null;
 }
 
-function enterOperator(event) {
-  let pressedOperator = event.target.textContent;
-  if (numberTop === null || numberBot === null) {
-    operator = pressedOperator;
-    if (numberBot !== null) {
-      numberTop = numberBot;
-      numberBot = null;
-    }
-    return;
-  }
-  numberTop = operate(numberTop, numberBot, operator);
-  numberBot = null;
-  operator = pressedOperator;
-}
-
-function enterOperator_(event) {
-  let pressedOperator = event.target.textContent;
-  let state = ((numberBot !== null) << 1) + (numberTop !== null);
-  switch (state) {
-    case 0: // there's no number
-    case 1: // there's only numberTop
-      operator = pressedOperator;
-      break;
-    case 2: // there's only numberBot
-      numberTop = numberBot;
-      numberBot = null;
-      operator = pressedOperator;
-      break;
-    case 3: // there's both numbers
-      numberTop = operate(numberTop, numberBot, operator);
-      numberBot = null;
-      operator = pressedOperator;
-      break;
-  }
-}
-
-function enterEqual() {
-  if (numberTop === null) return;
-  if (numberBot === null) {
-    numberBot = numberTop;
-    numberTop = null;
-  } else {
-    numberBot = operate(numberTop, numberBot, operator);
-    numberTop = null;
-  }
-}
-
-function enterEqual_() {
-  let state = ((numberBot !== null) << 1) + (numberTop !== null);
-  switch (state) {
-    case 0: // there's no number
-    case 2: // there's only numberBot
-      break;
-    case 1: // there's only numberTop
-      numberBot = numberTop;
-      numberTop = null;
-      break;
-    case 3: // there's both numbers
-      numberBot = operate(numberTop, numberBot, operator);
-      numberTop = null;
-      break;
-  }
-}
-
 function enterDigit(event) {
   let strDigit = event.target.textContent;
   if (numberBot === null) {
@@ -112,6 +48,32 @@ function eraseDigit() {
   numberBot = isOneDigit ? null : +strNumber.slice(0, -1);
 }
 
+function enterEqual() {
+  if (numberTop === null) return;
+  if (numberBot === null) {
+    numberBot = numberTop;
+    numberTop = null;
+  } else {
+    numberBot = operate(numberTop, numberBot, operator);
+    numberTop = null;
+  }
+}
+
+function enterOperator(event) {
+  let pressedOperator = event.target.textContent;
+  if (numberTop === null || numberBot === null) {
+    operator = pressedOperator;
+    if (numberBot !== null) {
+      numberTop = numberBot;
+      numberBot = null;
+    }
+    return;
+  }
+  numberTop = operate(numberTop, numberBot, operator);
+  numberBot = null;
+  operator = pressedOperator;
+}
+
 function updateDisplay() {
   console.log({ number1: numberTop, number2: numberBot, operator });
   divMinorDisplay.textContent =
@@ -120,7 +82,7 @@ function updateDisplay() {
 }
 
 let numberTop = 2;
-let numberBot = 123;
+let numberBot = 0;
 let operator = "+";
 
 updateDisplay();
