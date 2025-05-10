@@ -2,13 +2,13 @@ import { round, operate } from "./math.js";
 
 const divBotDisplay = document.querySelector("#primary-display");
 const divTopDisplay = document.querySelector("#secondary-display");
-const btnEqual = document.querySelector("button[data-type=equal]");
-const btnClear = document.querySelector("button[data-type=clear]");
-const btnBackspace = document.querySelector("button[data-type=backspace]");
-const digitButtons = document.querySelectorAll("button[data-type=digit]");
-const operatorButtons = document.querySelectorAll("button[data-type=operator]");
+const btnEqual = document.querySelector("button[data-equal]");
+const btnClear = document.querySelector("button[data-clear]");
+const btnBackspace = document.querySelector("button[data-backspace]");
+const digitButtons = document.querySelectorAll("button[data-digit]");
+const operatorButtons = document.querySelectorAll("button[data-operator]");
 const allButtons = document.querySelectorAll("button");
-const btnMinus = document.querySelector("button[minus-sign]");
+const btnMinus = document.querySelector("button[data-minus]");
 
 const MAX_DIGITS = 10;
 
