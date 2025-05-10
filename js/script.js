@@ -9,13 +9,14 @@ const digitButtons = document.querySelectorAll("button[data-digit]");
 const operatorButtons = document.querySelectorAll("button[data-operator]");
 const allButtons = document.querySelectorAll("button");
 const btnMinus = document.querySelector("button[data-minus]");
+const btnInvert = document.querySelector("button[data-invert]");
 
 const MAX_DIGITS = 10;
 
 btnBackspace.addEventListener("click", deleteDigit);
 btnClear.addEventListener("click", clearDisplay);
 btnEqual.addEventListener("click", enterEqual);
-
+btnInvert.addEventListener("click", invertSign);
 digitButtons.forEach((btn) => {
   btn.addEventListener("click", enterDigit);
 });
@@ -40,6 +41,15 @@ function clearDisplay() {
   numberTop = null;
   numberBot = null;
   isNegative = false;
+}
+
+function invertSign() {
+  if (numberBot === null) {
+    isNegative = !isNegative;
+    return;
+  }
+
+  numberBot *= -1;
 }
 
 function enterDigit(event) {
