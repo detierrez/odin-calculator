@@ -86,7 +86,7 @@ function enterEqual() {
     return;
   }
 
-  numberBot = operate(numberTop, numberBot, operator);
+  numberBot = calculate();
   numberTop = null;
 }
 
@@ -101,7 +101,7 @@ function enterOperator(event) {
     return;
   }
 
-  numberTop = operate(numberTop, numberBot, operator);
+  numberTop = calculate();
   numberBot = null;
   operator = pressedOperator;
 }
@@ -119,4 +119,14 @@ function updateDisplay() {
 
   let sign = isNegative ? "-" : "";
   divBotDisplay.textContent = numberBot === null ? sign : `${numberBot}`;
+}
+
+function calculate() {
+  let result = operate(numberTop, numberBot, operator);
+  let integerDigits = Math.round(result).toString().length;
+  if (integerDigits > MAX_DIGITS) {
+    return 9_999_999_999;
+  }
+  let decimalDigits = Math.max(0, 9 - integerDigits);
+  return round(result, decimalDigits);
 }
