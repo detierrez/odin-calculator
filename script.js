@@ -123,4 +123,8 @@ let numberTop = 2;
 let numberBot = 123;
 let operator = "+";
 
+<<<<<<< HEAD
 updateDisplay();
+=======
+updateDisplay();
+>>>>>>> 1d3a7de0e6d4e221907252835f49379a22ed390c
