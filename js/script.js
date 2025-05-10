@@ -1,4 +1,5 @@
 import { round, operate } from "./math.js";
+const log = console.log.bind(console);
 
 const divBotDisplay = document.querySelector("#primary-display");
 const divTopDisplay = document.querySelector("#secondary-display");
@@ -64,7 +65,8 @@ function enterDigit(event) {
   }
 
   let strNumber = numberBot.toString();
-  if (strNumber.length < MAX_DIGITS) {
+  let signAdjust = strNumber[0] === "-" ? 1 : 0;
+  if (strNumber.length < MAX_DIGITS + signAdjust) {
     numberBot = +(strNumber + strDigit);
   }
 }
@@ -78,13 +80,15 @@ function deleteDigit() {
   }
 
   let slicedNumber = numberBot.toString().slice(0, -1);
-  if (slicedNumber !== "" && slicedNumber !== "-") {
-    numberBot = +slicedNumber;
+  if (slicedNumber === "" || slicedNumber === "-") {
+    numberBot = null;
+    if (slicedNumber === "-") {
+      isNegative = true;
+    }
     return;
   }
 
-  if (slicedNumber === "-") isNegative = true;
-  numberBot = null;
+  numberBot = +slicedNumber;
 }
 
 function enterEqual() {
