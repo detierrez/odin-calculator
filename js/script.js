@@ -13,6 +13,8 @@ const btnMinus = document.querySelector("button[data-minus]");
 const btnInvert = document.querySelector("button[data-invert]");
 
 const MAX_DIGITS = 10;
+const MAX_NUMBER = 10 ** MAX_DIGITS - 1;
+const MIN_NUMBER = -MAX_NUMBER;
 
 btnBackspace.addEventListener("click", deleteDigit);
 btnClear.addEventListener("click", clearDisplay);
@@ -132,15 +134,20 @@ function updateDisplay() {
     numberTop === null ? "" : `${numberTop} ${operator}`;
 
   let sign = isNegative ? "-" : "";
-  divBotDisplay.textContent = numberBot === null ? sign : `${numberBot}`;
+  let overflowSign =
+    numberBot === MAX_NUMBER ? "≥ " : numberBot === MIN_NUMBER ? "≤" : "";
+  divBotDisplay.textContent =
+    numberBot === null ? sign : `${overflowSign}${numberBot}`;
 }
 
 function calculate() {
   let result = operate(numberTop, numberBot, operator);
-  let integerDigits = Math.round(result).toString().length;
-  if (integerDigits > MAX_DIGITS) {
-    return 9_999_999_999;
-  }
-  let decimalDigits = Math.max(0, 9 - integerDigits);
+  if (result >= MAX_NUMBER) return MAX_NUMBER;
+  if (result <= MIN_NUMBER) return MIN_NUMBER;
+
+  let resultStr = Math.round(result).toString();
+  let signAdjust = resultStr[0] === "-" ? 1 : 0;
+  let integerDigits = resultStr.length - signAdjust;
+  let decimalDigits = MAX_DIGITS - integerDigits;
   return round(result, decimalDigits);
 }
