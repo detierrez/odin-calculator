@@ -1,8 +1,8 @@
 import { round, operate } from "./math.js";
 const log = console.log.bind(console);
 
-const divTopDisplay = document.querySelector("#secondary-display");
-const divBotDisplay = document.querySelector("#primary-display");
+const divTopDisplay = document.querySelector("#top-display");
+const divBotDisplay = document.querySelector("#bot-display");
 const btnBackspace = document.querySelector("button[data-backspace]");
 const btnInvert = document.querySelector("button[data-invert]");
 const btnClear = document.querySelector("button[data-clear]");

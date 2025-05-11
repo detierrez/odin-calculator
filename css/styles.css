@@ -103,8 +103,8 @@ button:active {
   /* border-radius: 6px; */
 }
 
-#primary-display,
-#secondary-display {
+#top-display,
+#bot-display {
   flex: 1 0 var(--s);
   min-height: var(--s);
   padding: 1px 0;
@@ -113,7 +113,7 @@ button:active {
   align-items: flex-start;
 }
 
-#secondary-display {
+#top-display {
   align-items: flex-end;
   color: rgba(255, 255, 255, 0.493);
   font-size: 50%;
