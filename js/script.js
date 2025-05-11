@@ -45,6 +45,7 @@ function clearDisplay() {
   numberTop = null;
   numberBot = null;
   hasLeadingMinus = false;
+  hasTrailingDot = false;
 }
 
 function enterDigit(event) {
@@ -158,6 +159,18 @@ function invertNumberBotSign() {
   numberBot *= -1;
 }
 
+function calculate() {
+  let result = operate(numberTop, numberBot, operator);
+  if (result >= MAX_NUMBER) return MAX_NUMBER;
+  if (result <= MIN_NUMBER) return MIN_NUMBER;
+
+  let resultStr = Math.round(result).toString();
+  let signAdjust = resultStr[0] === "-" ? 1 : 0;
+  let integerDigits = resultStr.length - signAdjust;
+  let decimalDigits = MAX_DIGITS - integerDigits;
+  return round(result, decimalDigits);
+}
+
 function updateDisplay() {
   divTopDisplay.textContent = getTopDisplayString();
   divBotDisplay.textContent = getBotDisplayString();
@@ -177,18 +190,6 @@ function getBotDisplayString() {
   overflowSign = numberBot === MAX_NUMBER ? "≥ " : overflowSign;
   overflowSign = numberBot === MIN_NUMBER ? "≤" : overflowSign;
   return `${overflowSign}${numberBot}${trailigDot}`;
-}
-
-function calculate() {
-  let result = operate(numberTop, numberBot, operator);
-  if (result >= MAX_NUMBER) return MAX_NUMBER;
-  if (result <= MIN_NUMBER) return MIN_NUMBER;
-
-  let resultStr = Math.round(result).toString();
-  let signAdjust = resultStr[0] === "-" ? 1 : 0;
-  let integerDigits = resultStr.length - signAdjust;
-  let decimalDigits = MAX_DIGITS - integerDigits;
-  return round(result, decimalDigits);
 }
 
 function isNull(x) {
