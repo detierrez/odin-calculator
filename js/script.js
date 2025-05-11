@@ -27,13 +27,59 @@ btnClear.addEventListener("click", clearDisplay);
 btnEqual.addEventListener("click", enterEqual);
 btnDot.addEventListener("click", enterDot);
 digitButtons.forEach((btn) => {
-  btn.addEventListener("click", enterDigit);
+  btn.addEventListener("click", getDigitCb("mouse"));
 });
 operatorButtons.forEach((btn) => {
-  btn.addEventListener("click", enterOperator);
+  btn.addEventListener("click", getOperatorCb("mouse"));
 });
 allButtons.forEach((btn) => {
   btn.addEventListener("click", updateDisplay);
 });
 
+const clearKeys = ["c", "C"];
+const digitKeys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+const operatorKeys = ["/", "*", "-", "+", "%"];
+
+document.addEventListener("keydown", (event) => {
+  const keyName = event.key;
+  if (keyName === ".") enterDot();
+  if (keyName === "Enter") enterEqual();
+  if (keyName === "-") toggleLeadingMinus();
+  if (keyName === "Backspace") deleteRightSymbol();
+  if (clearKeys.includes(keyName)) clearDisplay();
+  if (digitKeys.includes(keyName)) getDigitCb("keyboard")(event);
+  if (operatorKeys.includes(keyName)) getOperatorCb("keyboard")(event);
+
+  updateDisplay();
+});
+
 updateDisplay();
+
+function getDigitCb(eventSource) {
+  let digit;
+  if (eventSource === "mouse") {
+    return function (event) {
+      digit = event.target.textContent;
+      enterDigit(digit);
+    };
+  } else if (eventSource === "keyboard") {
+    return function (event) {
+      digit = event.key;
+      enterDigit(digit);
+    };
+  }
+}
+
+function getOperatorCb(eventSource) {
+  if (eventSource === "mouse") {
+    return function (event) {
+      let operator = event.target.getAttribute("data-operator");
+      enterOperator(operator);
+    };
+  } else if (eventSource === "keyboard") {
+    return function (event) {
+      let operator = event.key;
+      enterOperator(operator);
+    };
+  }
+}

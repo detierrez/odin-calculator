@@ -7,11 +7,11 @@ export function operate(x, y, operator) {
   switch (operator) {
     case "+":
       return add(x, y);
-    case "−":
+    case "-":
       return substract(x, y);
-    case "×":
+    case "*":
       return multiply(x, y);
-    case "÷":
+    case "/":
       return divide(x, y);
     case "%":
       return percentage(x, y);

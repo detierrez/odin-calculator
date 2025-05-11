@@ -43,8 +43,7 @@ export function enterEqual() {
 }
 
 // adds a digit after another, or ".", or empty "".
-export function enterDigit(event) {
-  let digit = event.target.textContent;
+export function enterDigit(digit) {
   if (isNull(numberBot)) {
     numberBot = +digit;
     if (hasOnlyMinus) {
@@ -110,10 +109,9 @@ export function deleteRightSymbol() {
   numberBot = +slicedNumber;
 }
 
-export function enterOperator(event) {
-  let pressedOperator = event.target.textContent;
+export function enterOperator(newOperator) {
   if (isNull(numberTop) || isNull(numberBot)) {
-    operator = pressedOperator;
+    operator = newOperator;
     if (numberBot !== null) {
       numberTop = numberBot;
       numberBot = null;
@@ -123,7 +121,7 @@ export function enterOperator(event) {
 
   numberTop = calculate();
   numberBot = null;
-  operator = pressedOperator;
+  operator = newOperator;
 }
 
 export function toggleLeadingMinus() {
@@ -159,7 +157,11 @@ export function updateDisplay() {
 }
 
 function getTopDisplayString() {
-  return isNull(numberTop) ? "" : `${numberTop} ${operator}`;
+  let operator_ = operator;
+  operator_ = operator_ === "-" ? "−" : operator_;
+  operator_ = operator_ === "*" ? "×" : operator_;
+  operator_ = operator_ === "/" ? "÷" : operator_;
+  return isNull(numberTop) ? "" : `${numberTop} ${operator_}`;
 }
 
 function getBotDisplayString() {
