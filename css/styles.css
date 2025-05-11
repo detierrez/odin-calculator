@@ -4,7 +4,7 @@
 }
 
 html {
-  --s: 60px;
+  --s: 70px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
@@ -42,7 +42,7 @@ body {
 }
 
 #button-grid{
-  margin: 0px 15px;
+  margin: 0px 5px;
 }
 
 #button-grid button {
@@ -51,8 +51,8 @@ body {
   margin: 1px;
 
   font-family: inherit;
-  font-weight: 300;
-  font-size: 16px;
+  font-weight: 100;
+  font-size: 18px;
 
   color: rgb(var(--btn-color));
   border-radius: 5%;
@@ -94,11 +94,11 @@ body {
   flex-direction: column;
   justify-content: end;
   align-items: stretch;
-  padding: 0 30px;
+  padding: 0 28px;
 
   color: white;
   background-color: rgba(0, 0, 0, 0.53);
-  font-size: 30px;
+  font-size: 33px;
   font-family: monospace;
 }
 
