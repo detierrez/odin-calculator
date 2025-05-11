@@ -8,6 +8,7 @@ const btnInvert = document.querySelector("button[data-invert]");
 const btnClear = document.querySelector("button[data-clear]");
 const btnEqual = document.querySelector("button[data-equal]");
 const btnMinus = document.querySelector("button[data-minus]");
+const btnDot = document.querySelector("button[data-dot]");
 const operatorButtons = document.querySelectorAll("button[data-operator]");
 const digitButtons = document.querySelectorAll("button[data-digit]");
 const allButtons = document.querySelectorAll("button");
@@ -16,19 +17,18 @@ const MAX_DIGITS = 10;
 const MAX_NUMBER = 10 ** MAX_DIGITS - 1;
 const MIN_NUMBER = -MAX_NUMBER;
 
-btnBackspace.addEventListener("click", deleteDigit);
+btnBackspace.addEventListener("click", deleteRightSymbol);
+btnInvert.addEventListener("click", invertNumberBotSign);
+btnMinus.addEventListener("click", toggleLeadingMinus);
 btnClear.addEventListener("click", clearDisplay);
-btnInvert.addEventListener("click", invertSign);
 btnEqual.addEventListener("click", enterEqual);
-digitButtons.forEach((btn) => {
-  btn.addEventListener("click", enterDigit);
-});
-
+btnDot.addEventListener("click", enterDot);
 operatorButtons.forEach((btn) => {
   btn.addEventListener("click", enterOperator);
 });
-btnMinus.addEventListener("click", applySign);
-
+digitButtons.forEach((btn) => {
+  btn.addEventListener("click", enterDigit);
+});
 allButtons.forEach((btn) => {
   btn.addEventListener("click", updateDisplay);
 });
@@ -36,32 +36,24 @@ allButtons.forEach((btn) => {
 let numberTop = null;
 let numberBot = null;
 let operator = "+";
-let isNegative = false;
+let hasLeadingMinus = false;
+let hasTrailingDot = false;
 
 updateDisplay();
 
 function clearDisplay() {
   numberTop = null;
   numberBot = null;
-  isNegative = false;
-}
-
-function invertSign() {
-  if (numberBot === null) {
-    isNegative = !isNegative;
-    return;
-  }
-
-  numberBot *= -1;
+  hasLeadingMinus = false;
 }
 
 function enterDigit(event) {
-  let strDigit = event.target.textContent;
-  if (numberBot === null) {
-    numberBot = +strDigit;
-    if (isNegative) {
+  let digit = event.target.textContent;
+  if (isNull(numberBot)) {
+    numberBot = +digit;
+    if (hasLeadingMinus) {
       numberBot *= -1;
-      isNegative = false;
+      hasLeadingMinus = false;
     }
     return;
   }
@@ -69,24 +61,53 @@ function enterDigit(event) {
   let strNumber = numberBot.toString();
   let signAdjust = strNumber[0] === "-" ? 1 : 0;
   if (strNumber.length < MAX_DIGITS + signAdjust) {
-    numberBot = +(strNumber + strDigit);
+    numberBot = +(strNumber + (hasTrailingDot ? "." : "") + digit);
+    hasTrailingDot = false;
   }
 }
 
-function deleteDigit() {
-  if (numberBot === null) {
-    if (isNegative) {
-      isNegative = false;
-    }
+function enterDot() {
+  if (isNull(numberBot)) {
+    numberBot = 0;
+    hasTrailingDot = true;
+    return;
+  }
+
+  if (numberBot.toString().includes(".")) {
+    return;
+  }
+
+  hasTrailingDot = true;
+}
+
+// deletes the right symbol in the bottom display. Could be a digit, "." or "-";
+function deleteRightSymbol() {
+  if (isNull(numberBot)) {
+    hasLeadingMinus = false;
+    return;
+  }
+
+  if (hasTrailingDot) {
+    hasTrailingDot = false;
     return;
   }
 
   let slicedNumber = numberBot.toString().slice(0, -1);
-  if (slicedNumber === "" || slicedNumber === "-") {
+
+  if (slicedNumber === "") {
     numberBot = null;
-    if (slicedNumber === "-") {
-      isNegative = true;
-    }
+    return;
+  }
+
+  if (slicedNumber === "-") {
+    hasLeadingMinus = true;
+    numberBot = null;
+    return;
+  }
+
+  if (slicedNumber.slice(-1) === ".") {
+    hasTrailingDot = true;
+    numberBot = +slicedNumber.slice(0, -1);
     return;
   }
 
@@ -94,9 +115,9 @@ function deleteDigit() {
 }
 
 function enterEqual() {
-  if (numberTop === null) return;
+  if (isNull(numberTop)) return;
 
-  if (numberBot === null) {
+  if (isNull(numberBot)) {
     numberBot = numberTop;
     numberTop = null;
     return;
@@ -108,7 +129,7 @@ function enterEqual() {
 
 function enterOperator(event) {
   let pressedOperator = event.target.textContent;
-  if (numberTop === null || numberBot === null) {
+  if (isNull(numberTop) || isNull(numberBot)) {
     operator = pressedOperator;
     if (numberBot !== null) {
       numberTop = numberBot;
@@ -122,21 +143,40 @@ function enterOperator(event) {
   operator = pressedOperator;
 }
 
-function applySign() {
-  if (numberTop === null && numberBot === null) {
-    isNegative = !isNegative;
+function toggleLeadingMinus() {
+  if (isNull(numberTop) && isNull(numberBot)) {
+    hasLeadingMinus = !hasLeadingMinus;
   }
 }
 
-function updateDisplay() {
-  divTopDisplay.textContent =
-    numberTop === null ? "" : `${numberTop} ${operator}`;
+function invertNumberBotSign() {
+  if (isNull(numberBot)) {
+    hasLeadingMinus = !hasLeadingMinus;
+    return;
+  }
 
-  let sign = isNegative ? "-" : "";
-  let overflowSign =
-    numberBot === MAX_NUMBER ? "≥ " : numberBot === MIN_NUMBER ? "≤" : "";
-  divBotDisplay.textContent =
-    numberBot === null ? sign : `${overflowSign}${numberBot}`;
+  numberBot *= -1;
+}
+
+function updateDisplay() {
+  divTopDisplay.textContent = getTopDisplayString();
+  divBotDisplay.textContent = getBotDisplayString();
+}
+
+function getTopDisplayString() {
+  return isNull(numberTop) ? "" : `${numberTop} ${operator}`;
+}
+
+function getBotDisplayString() {
+  if (isNull(numberBot)) {
+    return hasLeadingMinus ? "-" : "";
+  }
+
+  let trailigDot = hasTrailingDot ? "." : "";
+  let overflowSign = "";
+  overflowSign = numberBot === MAX_NUMBER ? "≥ " : overflowSign;
+  overflowSign = numberBot === MIN_NUMBER ? "≤" : overflowSign;
+  return `${overflowSign}${numberBot}${trailigDot}`;
 }
 
 function calculate() {
@@ -149,4 +189,8 @@ function calculate() {
   let integerDigits = resultStr.length - signAdjust;
   let decimalDigits = MAX_DIGITS - integerDigits;
   return round(result, decimalDigits);
+}
+
+function isNull(x) {
+  return x === null;
 }
