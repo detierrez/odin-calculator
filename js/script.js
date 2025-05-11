@@ -1,16 +1,16 @@
 import { round, operate } from "./math.js";
 const log = console.log.bind(console);
 
-const divBotDisplay = document.querySelector("#primary-display");
 const divTopDisplay = document.querySelector("#secondary-display");
-const btnEqual = document.querySelector("button[data-equal]");
-const btnClear = document.querySelector("button[data-clear]");
+const divBotDisplay = document.querySelector("#primary-display");
 const btnBackspace = document.querySelector("button[data-backspace]");
-const digitButtons = document.querySelectorAll("button[data-digit]");
-const operatorButtons = document.querySelectorAll("button[data-operator]");
-const allButtons = document.querySelectorAll("button");
-const btnMinus = document.querySelector("button[data-minus]");
 const btnInvert = document.querySelector("button[data-invert]");
+const btnClear = document.querySelector("button[data-clear]");
+const btnEqual = document.querySelector("button[data-equal]");
+const btnMinus = document.querySelector("button[data-minus]");
+const operatorButtons = document.querySelectorAll("button[data-operator]");
+const digitButtons = document.querySelectorAll("button[data-digit]");
+const allButtons = document.querySelectorAll("button");
 
 const MAX_DIGITS = 10;
 const MAX_NUMBER = 10 ** MAX_DIGITS - 1;
@@ -18,8 +18,8 @@ const MIN_NUMBER = -MAX_NUMBER;
 
 btnBackspace.addEventListener("click", deleteDigit);
 btnClear.addEventListener("click", clearDisplay);
-btnEqual.addEventListener("click", enterEqual);
 btnInvert.addEventListener("click", invertSign);
+btnEqual.addEventListener("click", enterEqual);
 digitButtons.forEach((btn) => {
   btn.addEventListener("click", enterDigit);
 });
@@ -129,7 +129,6 @@ function applySign() {
 }
 
 function updateDisplay() {
-  console.log({ number1: numberTop, number2: numberBot, operator });
   divTopDisplay.textContent =
     numberTop === null ? "" : `${numberTop} ${operator}`;
 
