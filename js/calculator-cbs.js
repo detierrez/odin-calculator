@@ -17,7 +17,7 @@ if numberBot is null.
 - trailingDot is for cases like "123.", but not "123.4".
 */
 let numberTop = null;
-let numberBot = null;
+let numberBot = MAX_NUMBER;
 let operator = "+";
 let hasOnlyMinus = false;
 let hasTrailingDot = false;
