@@ -96,14 +96,14 @@ export function deleteRightSymbol() {
     isOnlyMinus = false;
     return;
   }
-
-  if (hasTrailingDot) {
-    hasTrailingDot = false;
+  
+  if (numberBot === "💀") {
+    setNumberBot(null);
     return;
   }
 
-  if (numberBot === "💀") {
-    setNumberBot(null);
+  if (hasTrailingDot) {
+    hasTrailingDot = false;
     return;
   }
 
@@ -154,6 +154,11 @@ export function toggleLeadingMinus() {
 export function invertNumberBotSign() {
   if (isNull(numberBot)) {
     isOnlyMinus = !isOnlyMinus;
+    return;
+  }
+
+  if (numberBot === "💀") {
+    setNumberBot(null);
     return;
   }
 

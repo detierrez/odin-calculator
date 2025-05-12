@@ -1,7 +1,7 @@
 import {
   deleteRightSymbol,
   invertNumberBotSign,
-  toggleLeadingMinus,
+  toggleOnlyMinus,
   clearDisplay,
   enterEqual,
   enterDot,
@@ -22,7 +22,7 @@ const allButtons = document.querySelectorAll("button");
 
 btnBackspace.addEventListener("click", deleteRightSymbol);
 btnInvert.addEventListener("click", invertNumberBotSign);
-btnMinus.addEventListener("click", toggleLeadingMinus);
+btnMinus.addEventListener("click", toggleOnlyMinus);
 btnClear.addEventListener("click", clearDisplay);
 btnEqual.addEventListener("click", enterEqual);
 btnDot.addEventListener("click", enterDot);
@@ -44,7 +44,7 @@ document.addEventListener("keydown", (event) => {
   const keyName = event.key;
   if (keyName === ".") enterDot();
   if (keyName === "Enter") enterEqual();
-  if (keyName === "-") toggleLeadingMinus();
+  if (keyName === "-") toggleOnlyMinus();
   if (keyName === "Backspace") deleteRightSymbol();
   if (clearKeys.includes(keyName)) clearDisplay();
   if (digitKeys.includes(keyName)) getDigitCb("keyboard")(event);
