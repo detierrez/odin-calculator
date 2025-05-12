@@ -16,16 +16,24 @@ If numberTop is null, nothing is shown no matter the operator.
 if numberBot is null.
 - trailingDot is for cases like "123.", but not "123.4".
 */
-let numberTop = null;
-let numberBot = MAX_NUMBER;
 let operator = "+";
-let hasOnlyMinus = false;
+let numberTop = null;
+let numberBot = null;
+let isOnlyMinus = false;
 let hasTrailingDot = false;
 
 export function clearDisplay() {
-  numberTop = null;
-  numberBot = null;
-  hasOnlyMinus = false;
+  setNumberTop(null);
+  setNumberBot(null);
+}
+
+function setNumberTop(n) {
+  numberTop = n;
+}
+
+function setNumberBot(n) {
+  numberBot = n;
+  isOnlyMinus = false;
   hasTrailingDot = false;
 }
 
@@ -33,37 +41,34 @@ export function enterEqual() {
   if (isNull(numberTop)) return;
 
   if (isNull(numberBot)) {
-    numberBot = numberTop;
-    numberTop = null;
+    setNumberBot(numberTop);
+    setNumberTop(null);
     return;
   }
 
-  numberBot = calculate();
-  numberTop = null;
+  setNumberBot(calculate());
+  setNumberTop(null);
 }
 
-// adds a digit after another, or ".", or empty "".
+// adds a digit after another digit, "." or empty "".
 export function enterDigit(digit) {
   if (isNull(numberBot)) {
-    numberBot = +digit;
-    if (hasOnlyMinus) {
-      hasOnlyMinus = false;
-      numberBot *= -1;
-    }
+    let sign = isOnlyMinus ? "-" : "";
+    setNumberBot(+`${sign}${digit}`);
     return;
   }
 
   let strNumber = numberBot.toString();
   let signAdjust = strNumber[0] === "-" ? 1 : 0;
   if (strNumber.length < MAX_DIGITS + signAdjust) {
-    numberBot = +(strNumber + (hasTrailingDot ? "." : "") + digit);
-    hasTrailingDot = false;
+    let dot = hasTrailingDot ? "." : "";
+    setNumberBot(+`${strNumber}${dot}${digit}`);
   }
 }
 
 export function enterDot() {
   if (isNull(numberBot)) {
-    numberBot = 0;
+    setNumberBot(0);
     hasTrailingDot = true;
     return;
   }
@@ -78,7 +83,7 @@ export function enterDot() {
 // deletes the right symbol in the bottom display. Could be a digit, "." or "-";
 export function deleteRightSymbol() {
   if (isNull(numberBot)) {
-    hasOnlyMinus = false;
+    isOnlyMinus = false;
     return;
   }
 
@@ -90,49 +95,50 @@ export function deleteRightSymbol() {
   let slicedNumber = numberBot.toString().slice(0, -1);
 
   if (slicedNumber === "") {
-    numberBot = null;
+    setNumberBot(null);
     return;
   }
 
   if (slicedNumber === "-") {
-    hasOnlyMinus = true;
-    numberBot = null;
+    setNumberBot(null);
+    isOnlyMinus = true;
     return;
   }
 
   if (slicedNumber.slice(-1) === ".") {
+    setNumberBot(+slicedNumber.slice(0, -1));
     hasTrailingDot = true;
-    numberBot = +slicedNumber.slice(0, -1);
     return;
   }
 
-  numberBot = +slicedNumber;
+  setNumberBot(+slicedNumber);
 }
 
 export function enterOperator(newOperator) {
   if (isNull(numberTop) || isNull(numberBot)) {
     operator = newOperator;
+    hasTrailingDot = false;
     if (numberBot !== null) {
-      numberTop = numberBot;
-      numberBot = null;
+      setNumberTop(numberBot);
+      setNumberBot(null);
     }
     return;
   }
 
-  numberTop = calculate();
-  numberBot = null;
+  setNumberTop(calculate());
+  setNumberBot(null);
   operator = newOperator;
 }
 
 export function toggleLeadingMinus() {
   if (isNull(numberTop) && isNull(numberBot)) {
-    hasOnlyMinus = !hasOnlyMinus;
+    isOnlyMinus = !isOnlyMinus;
   }
 }
 
 export function invertNumberBotSign() {
   if (isNull(numberBot)) {
-    hasOnlyMinus = !hasOnlyMinus;
+    isOnlyMinus = !isOnlyMinus;
     return;
   }
 
@@ -166,7 +172,7 @@ function getTopDisplayString() {
 
 function getBotDisplayString() {
   if (isNull(numberBot)) {
-    return hasOnlyMinus ? "-" : "";
+    return isOnlyMinus ? "-" : "";
   }
 
   let trailigDot = hasTrailingDot ? "." : "";
