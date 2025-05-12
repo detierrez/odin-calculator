@@ -145,7 +145,7 @@ export function enterOperator(newOperator) {
   operator = newOperator;
 }
 
-export function toggleLeadingMinus() {
+export function toggleOnlyMinus() {
   if (isNull(numberTop) && isNull(numberBot)) {
     isOnlyMinus = !isOnlyMinus;
   }
