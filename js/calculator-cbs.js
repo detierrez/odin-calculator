@@ -58,6 +58,11 @@ export function enterDigit(digit) {
     return;
   }
 
+  if (numberBot === "💀") {
+    setNumberBot(null);
+    return;
+  }
+
   let strNumber = numberBot.toString();
   let signAdjust = strNumber[0] === "-" ? 1 : 0;
   if (strNumber.length < MAX_DIGITS + signAdjust) {
@@ -70,6 +75,11 @@ export function enterDot() {
   if (isNull(numberBot)) {
     setNumberBot(0);
     hasTrailingDot = true;
+    return;
+  }
+
+  if (numberBot === "💀") {
+    setNumberBot(null);
     return;
   }
 
@@ -89,6 +99,11 @@ export function deleteRightSymbol() {
 
   if (hasTrailingDot) {
     hasTrailingDot = false;
+    return;
+  }
+
+  if (numberBot === "💀") {
+    setNumberBot(null);
     return;
   }
 
@@ -147,6 +162,7 @@ export function invertNumberBotSign() {
 
 function calculate() {
   let result = operate(numberTop, numberBot, operator);
+  if (isNaN(result)) return "💀";
   if (result >= MAX_NUMBER) return MAX_NUMBER;
   if (result <= MIN_NUMBER) return MIN_NUMBER;
 
